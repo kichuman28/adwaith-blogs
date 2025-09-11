@@ -1,5 +1,5 @@
 ---
-title: Why I Write
+title: Luck 
 date: 2025-07-21
 ---
 

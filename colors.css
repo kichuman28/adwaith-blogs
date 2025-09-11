@@ -1,0 +1,7 @@
+:root {
+  --color-bg: #fdfcf7;      /* background */
+  --color-text: #2d2d2d;    /* main text */
+  --color-accent: #3a6ea5;  /* links */
+  --color-muted: #777777;   /* secondary text */
+  --color-border: #e0e0e0;  /* subtle lines */
+}

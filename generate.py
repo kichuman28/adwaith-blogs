@@ -1,5 +1,6 @@
 import os
 import markdown
+import shutil
 
 # Paths
 POSTS_DIR = "posts"
@@ -7,8 +8,9 @@ OUTPUT_DIR = "output"
 TEMPLATE_FILE = "template.html"
 STYLE_FILE = "style.css"
 COLORS_FILE = "colors.css"
+IMAGES_DIR = "images"  # folder where post images are stored
 
-# Read HTML template for individual posts
+# Read HTML template
 with open(TEMPLATE_FILE, 'r') as f:
     template = f.read()
 
@@ -18,10 +20,14 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 # Copy CSS files to output
 for css_file in [STYLE_FILE, COLORS_FILE]:
     if os.path.exists(css_file):
-        with open(css_file, 'r') as f:
-            css = f.read()
-        with open(os.path.join(OUTPUT_DIR, css_file), 'w') as f:
-            f.write(css)
+        shutil.copy(css_file, OUTPUT_DIR)
+
+# Copy images to output folder
+if os.path.exists(IMAGES_DIR):
+    for img_file in os.listdir(IMAGES_DIR):
+        src = os.path.join(IMAGES_DIR, img_file)
+        dst = os.path.join(OUTPUT_DIR, img_file)
+        shutil.copy(src, dst)
 
 # Store metadata for homepage
 index_entries = []
@@ -35,30 +41,40 @@ for filename in os.listdir(POSTS_DIR):
     with open(filepath, 'r') as f:
         lines = f.read().splitlines()
 
+    # Default values
+    title = filename.replace(".md", "")
+    date = ""
+    image = ""  # No default image
+    content_start = 0
+
     # Extract frontmatter
     if lines and lines[0] == "---":
-        title = ""
-        date = ""
-        content_start = 0
         for i, line in enumerate(lines[1:], start=1):
             if line.startswith("title:"):
                 title = line.split("title:")[1].strip()
             elif line.startswith("date:"):
                 date = line.split("date:")[1].strip()
+            elif line.startswith("image:"):
+                image = line.split("image:")[1].strip()
             elif line == "---":
                 content_start = i + 1
                 break
         content_md = "\n".join(lines[content_start:])
     else:
-        title = filename.replace(".md", "")
-        date = ""
         content_md = "\n".join(lines)
 
     html_content = markdown.markdown(content_md)
 
-    # Apply template for post
+    # Handle optional image
+    if image:
+        image_html = f'<div class="post-image"><img src="{image}" alt="Post image"></div>'
+    else:
+        image_html = ""
+
+    # Apply template
     final_html = template.replace("{{ title }}", title)\
                          .replace("{{ date }}", date)\
+                         .replace("{{ image_html }}", image_html)\
                          .replace("{{ content }}", html_content)
 
     # Write post to output
@@ -66,13 +82,13 @@ for filename in os.listdir(POSTS_DIR):
     with open(os.path.join(OUTPUT_DIR, output_filename), 'w') as f:
         f.write(final_html)
 
-    # Collect for index
+    # Collect for homepage
     index_entries.append((date, title, output_filename))
 
 # Sort entries by date descending
 index_entries.sort(reverse=True)
 
-# Generate new homepage layout
+# Generate homepage
 index_html = """<!DOCTYPE html>
 <html>
 <head>
@@ -100,8 +116,7 @@ index_html += """      </ul>
 </html>
 """
 
-# Write homepage
 with open(os.path.join(OUTPUT_DIR, "index.html"), 'w') as f:
     f.write(index_html)
 
-print("✅ Blog generated with new homepage in /output")
+print("✅ Blog generated with optional per-post images in /output")

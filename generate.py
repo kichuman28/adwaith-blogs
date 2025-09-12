@@ -104,7 +104,7 @@ index_html = """<!DOCTYPE html>
       <p class="tagline">Part-time writer, full-time thinker.</p>
     </div>
     <div class="main">
-      <h1>Mostly thoughts, sometimes essays.</h1>
+      <h1>Blogs</h1>
       <p class="intro">I like to write about random stuff. Feel free to read my thoughts below :)</p>
       <ul>
 """

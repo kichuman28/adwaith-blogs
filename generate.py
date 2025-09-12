@@ -11,7 +11,7 @@ COLORS_FILE = "colors.css"
 IMAGES_DIR = "images"  # folder where post images are stored
 
 # Read HTML template
-with open(TEMPLATE_FILE, 'r') as f:
+with open(TEMPLATE_FILE, 'r', encoding="utf-8") as f:
     template = f.read()
 
 # Ensure output directory exists
@@ -38,7 +38,7 @@ for filename in os.listdir(POSTS_DIR):
         continue
 
     filepath = os.path.join(POSTS_DIR, filename)
-    with open(filepath, 'r') as f:
+    with open(filepath, 'r', encoding="utf-8") as f:
         lines = f.read().splitlines()
 
     # Default values
@@ -63,6 +63,7 @@ for filename in os.listdir(POSTS_DIR):
     else:
         content_md = "\n".join(lines)
 
+    # Convert Markdown -> HTML
     html_content = markdown.markdown(content_md)
 
     # Handle optional image
@@ -79,16 +80,16 @@ for filename in os.listdir(POSTS_DIR):
 
     # Write post to output
     output_filename = filename.replace(".md", ".html")
-    with open(os.path.join(OUTPUT_DIR, output_filename), 'w') as f:
+    with open(os.path.join(OUTPUT_DIR, output_filename), 'w', encoding="utf-8") as f:
         f.write(final_html)
 
     # Collect for homepage
     index_entries.append((date, title, output_filename))
 
-# Sort entries by date descending
+# Sort entries by date (newest first)
 index_entries.sort(reverse=True)
 
-# Generate homepage
+# Generate homepage (clean essay list)
 index_html = """<!DOCTYPE html>
 <html>
 <head>
@@ -99,15 +100,17 @@ index_html = """<!DOCTYPE html>
   <div class="container">
     <div class="sidebar">
       <img src="me.jpg" alt="Adwaith's photo">
+      <h2>Adwaith Jayasankar</h2>
+      <p class="tagline">Part-time writer, full-time thinker.</p>
     </div>
     <div class="main">
-      <h1>Hi. My name is Adwaith.</h1>
+      <h1>Mostly thoughts, sometimes essays.</h1>
       <p class="intro">I like to write about random stuff. Feel free to read my thoughts below :)</p>
       <ul>
 """
 
 for date, title, link in index_entries:
-    index_html += f"        <li><a href='{link}'>{title}</a> <i>{date}</i></li>\n"
+    index_html += f'        <li><a href="{link}">{title}</a> <i>{date}</i></li>\n'
 
 index_html += """      </ul>
     </div>
@@ -116,7 +119,8 @@ index_html += """      </ul>
 </html>
 """
 
-with open(os.path.join(OUTPUT_DIR, "index.html"), 'w') as f:
+# Write homepage
+with open(os.path.join(OUTPUT_DIR, "index.html"), 'w', encoding="utf-8") as f:
     f.write(index_html)
 
-print("✅ Blog generated with optional per-post images in /output")
+print("✅ Blog generated with clean essay list + per-post images in /output")

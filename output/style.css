@@ -35,9 +35,20 @@ a:hover {
 }
 
 .sidebar img {
-  max-width: 150px;
+  max-width: 220px;   /* Bigger profile image */
   border-radius: 50%;
   margin-bottom: 20px;
+}
+
+.sidebar h2 {
+  margin: 10px 0 5px;
+  font-size: 22px;
+}
+
+.sidebar .tagline {
+  font-size: 15px;
+  color: var(--color-muted);
+  margin-bottom: 25px;
 }
 
 .main {
@@ -53,52 +64,78 @@ h1 {
 p.intro {
   font-size: 16px;
   color: var(--color-muted);
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
+/* Essay list (clean, no cards) */
 ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 ul li {
-  margin: 8px 0;
+  margin: 12px 0;
+  font-size: 18px;
+}
+
+ul li a {
+  font-weight: bold;
+  color: var(--color-text);
+}
+
+ul li i {
+  font-size: 14px;
+  color: var(--color-muted);
+  margin-left: 6px;
 }
 
 /* ===== Post Page Styles ===== */
 .post-container {
-  max-width: 700px;
+  width: 100%;
+  max-width: 1000px;
   margin: 60px auto;
-  padding: 20px;
+  padding: 40px;
   background: var(--color-post-bg, #fff);
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-sizing: border-box;
 }
 
-.post-container h1 {
+/* Center title + date */
+.post-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.post-header h1 {
   font-size: 32px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
-.post-date {
+.post-header .post-date {
   font-size: 14px;
   color: var(--color-muted);
-  margin-bottom: 20px;
+  margin: 0;
 }
 
 .post-image {
   text-align: center;
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 .post-image img {
   max-width: 100%;
+  height: auto;
   border-radius: 8px;
 }
 
+/* keep readable line length */
 .post-content {
   font-size: 18px;
   line-height: 1.8;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 /* ===== Post Content Elements ===== */
@@ -163,5 +200,9 @@ ul li {
 
   .main {
     padding-left: 0;
+  }
+
+  .post-container {
+    padding: 20px;
   }
 }
